@@ -27,6 +27,22 @@ const App = () => {
     }
   }
 
+  const getMovie = async () => {
+    setIsLoading(true)
+    try {
+      const movieData = await axios({
+        url: `http://www.omdbapi.com?t=${search}`,
+        method: 'get'
+      })
+      console.log(movieData.data)
+      setMovie(movieData.data)
+      setIsLoading(false)
+      setSearch('')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className='container'>
       {
@@ -51,17 +67,17 @@ const App = () => {
             :
             <div className='search-container'>
               <h1 className='title'>Search for a movie</h1>
-              <input type='text' placeholder='Movie Title' />
-              <button className='search'>Search</button>
+              <input type='text' placeholder='Movie Title' value={search} onChange={e => setSearch(e.target.value)} />
+              <button className='search' onClick={getMovie}>Search</button>
               {
                 movie.Title &&
                 <div className='movie-details'>
                   <img src={movie.Poster ?? 'https://via.placeholder.com/300x450'} />
                   <p className='movie-title'>{movie.Title} ({movie.Year})</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus massa diam, laoreet ac euismod eget, faucibus semper ligula. Praesent sed lacus ac tortor euismod varius. Vivamus sed diam libero. Duis.</p>
-                  <p>Runtime:</p>
-                  <p>Director:</p>
-                  <p>Stars:</p>
+                  <p>{movie.Plot}</p>
+                  <p>Runtime: {movie.Runtime}</p>
+                  <p>Director: {movie.Director}</p>
+                  <p>Stars: {movie.Actors}</p>
                 </div>
               }
             </div>
